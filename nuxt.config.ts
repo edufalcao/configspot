@@ -17,14 +17,18 @@ export default defineNuxtConfig({
         // OpenGraph
         { property: 'og:title', content: 'configspot — Config Comparison & Validation Tool' },
         { property: 'og:description', content: 'Compare. Validate. Ship. A developer-focused config comparison and validation tool for .env, JSON, YAML, TOML, and INI files.' },
+        { property: 'og:image', content: 'https://configspot.edufalcao.com/og.png' },
+        { property: 'og:url', content: 'https://configspot.edufalcao.com' },
         { property: 'og:type', content: 'website' },
         // Twitter/X
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: 'configspot — Config Comparison & Validation Tool' },
-        { name: 'twitter:description', content: 'Compare. Validate. Ship. A developer-focused config comparison and validation tool for .env, JSON, YAML, TOML, and INI files.' }
+        { name: 'twitter:description', content: 'Compare. Validate. Ship. A developer-focused config comparison and validation tool for .env, JSON, YAML, TOML, and INI files.' },
+        { name: 'twitter:image', content: 'https://configspot.edufalcao.com/og.png' }
       ],
       link: [
-        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'canonical', href: 'https://configspot.edufalcao.com' }
       ],
       script: [
         {
@@ -33,6 +37,7 @@ export default defineNuxtConfig({
             '@context': 'https://schema.org',
             '@type': 'WebApplication',
             'name': 'configspot',
+            'url': 'https://configspot.edufalcao.com',
             'description': 'Compare. Validate. Ship. A developer-focused config comparison and validation tool for .env, JSON, YAML, TOML, and INI files.',
             'applicationCategory': 'DeveloperApplication',
             'operatingSystem': 'Any',
