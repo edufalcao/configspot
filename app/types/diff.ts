@@ -1,6 +1,9 @@
 import type { ConfigFormat } from './config';
+import type { RiskSeverity } from './risk';
 
 export type ChangeType = 'added' | 'removed' | 'changed' | 'unchanged';
+
+export type ResultsTab = 'semantic' | 'raw' | 'summary' | 'tree';
 
 export interface DiffChange {
   path: string,
@@ -22,4 +25,21 @@ export interface DiffStats {
   changed: number,
   unchanged: number,
   total: number
+}
+
+export interface TreeNodeStats {
+  added: number,
+  removed: number,
+  changed: number,
+  unchanged: number
+}
+
+export interface TreeNode {
+  name: string,
+  path: string,
+  depth: number,
+  change: DiffChange | null,
+  children: TreeNode[],
+  stats: TreeNodeStats,
+  maxRiskSeverity: RiskSeverity | null
 }

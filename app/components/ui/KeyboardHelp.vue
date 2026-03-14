@@ -14,7 +14,8 @@ const shortcuts = [
   { key: 's', description: 'Toggle secret masking' },
   { key: '1', description: 'Semantic diff tab' },
   { key: '2', description: 'Raw diff tab' },
-  { key: '3', description: 'Summary tab' },
+  { key: '3', description: 'Tree tab' },
+  { key: '4', description: 'Summary tab' },
   { key: '?', description: 'Show/hide this help' },
   { key: 'Esc', description: 'Close this overlay' }
 ];

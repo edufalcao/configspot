@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DiffResult } from '~/types/diff';
+import type { DiffResult, ResultsTab } from '~/types/diff';
 import type { RiskAnnotation } from '~/types/risk';
 
 const props = defineProps<{
@@ -9,13 +9,13 @@ const props = defineProps<{
   shareUrl: string | null,
   isSharing: boolean,
   copied: boolean,
-  activeTab: 'semantic' | 'raw' | 'summary'
+  activeTab: ResultsTab
 }>();
 
 const emit = defineEmits<{
   'share': [],
   'copyUrl': [],
-  'update:activeTab': [value: 'semantic' | 'raw' | 'summary']
+  'update:activeTab': [value: ResultsTab]
 }>();
 
 const showExportMenu = ref(false);
@@ -91,7 +91,7 @@ function formatDisplayValue(value: unknown): string {
     <!-- Tab controls + share + export -->
     <div class="flex items-center gap-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-1">
       <button
-        v-for="tab in (['semantic', 'raw', 'summary'] as const)"
+        v-for="tab in (['semantic', 'raw', 'tree', 'summary'] as const)"
         :key="tab"
         :class="[
           'rounded-md px-3 py-1.5 font-[var(--font-mono)] text-xs font-medium transition-colors',
@@ -101,7 +101,7 @@ function formatDisplayValue(value: unknown): string {
         ]"
         @click="emit('update:activeTab', tab)"
       >
-        {{ tab === 'semantic' ? 'Semantic' : tab === 'raw' ? 'Raw Diff' : 'Summary' }}
+        {{ tab === 'semantic' ? 'Semantic' : tab === 'raw' ? 'Raw Diff' : tab === 'tree' ? 'Tree' : 'Summary' }}
       </button>
 
       <div class="ml-auto flex items-center gap-2 px-1">
@@ -194,6 +194,14 @@ function formatDisplayValue(value: unknown): string {
         >
           <pre class="p-4 font-[var(--font-mono)] text-sm text-[var(--color-text)]">{{ result.rawDiff }}</pre>
         </div>
+
+        <!-- Tree Explorer -->
+        <ResultsTreeExplorer
+          v-else-if="activeTab === 'tree'"
+          :changes="result.changes"
+          :risks="risks"
+          :mask-secrets="maskSecrets"
+        />
 
         <!-- Smart Summary -->
         <div

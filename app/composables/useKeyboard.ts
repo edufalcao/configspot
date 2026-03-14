@@ -3,7 +3,7 @@ export interface KeyboardCallbacks {
   onToggleFormatFilter?: () => void,
   onToggleRiskyFilter?: () => void,
   onToggleSecretMask?: () => void,
-  onSwitchTab?: (tab: 'semantic' | 'raw' | 'summary') => void
+  onSwitchTab?: (tab: import('~/types/diff').ResultsTab) => void
 }
 
 const showHelp = ref(false);
@@ -74,6 +74,10 @@ export function useKeyboard(callbacks: KeyboardCallbacks = {}) {
         callbacks.onSwitchTab?.('raw');
         break;
       case '3':
+        e.preventDefault();
+        callbacks.onSwitchTab?.('tree');
+        break;
+      case '4':
         e.preventDefault();
         callbacks.onSwitchTab?.('summary');
         break;

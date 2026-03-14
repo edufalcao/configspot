@@ -37,7 +37,7 @@ function handleShare() {
   }
 }
 
-const activeTab = ref<'semantic' | 'raw' | 'summary'>('semantic');
+const activeTab = ref<import('~/types/diff').ResultsTab>('semantic');
 
 const { showHelp } = useKeyboard({
   onCompare: () => compare(),

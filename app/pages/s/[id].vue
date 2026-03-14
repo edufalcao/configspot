@@ -18,7 +18,7 @@ const format = ref<ConfigFormat>('env');
 const { shareUrl, isSharing, copied, copyUrl } = useShare();
 shareUrl.value = window.location.href;
 
-const activeTab = ref<'semantic' | 'raw' | 'summary'>('semantic');
+const activeTab = ref<import('~/types/diff').ResultsTab>('semantic');
 
 try {
   const data = await $fetch<{

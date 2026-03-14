@@ -6,6 +6,7 @@ import { semanticDiff } from './semantic';
 export { rawDiff } from './raw';
 export { semanticDiff } from './semantic';
 export { generateSummary } from './summary';
+export { buildTree } from './tree';
 
 export function compareConfigs(left: ConfigTree, right: ConfigTree): DiffResult {
   const changes = semanticDiff(left, right);
