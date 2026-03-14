@@ -30,7 +30,7 @@ function handleShare() {
         <span class="text-[var(--color-text)]">that understands structure</span>
       </h1>
       <p class="mx-auto max-w-xl text-base text-[var(--color-muted)]">
-        Compare .env, JSON, YAML, TOML, and INI files with semantic diffs, risk detection, and secret masking. Order-independent — key changes matter, not line positions.
+        Compare .env, JSON, YAML, TOML, and INI files with semantic diffs, risk detection, and secret masking. <span class="text-[var(--color-accent)]">Order-independent</span> — <span class="text-[var(--color-accent-2)]">key changes matter</span>, not line positions.
       </p>
       <div class="mt-5 flex items-center justify-center gap-3">
         <UiBaseButton
