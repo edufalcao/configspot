@@ -17,7 +17,7 @@ function severityColor(severity: string): string {
 <template>
   <div
     v-if="annotations.length > 0"
-    class="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4"
+    class="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4"
   >
     <h3 class="mb-3 font-[var(--font-display)] text-sm font-semibold text-[var(--color-text)]">
       Risk Summary
@@ -36,7 +36,7 @@ function severityColor(severity: string): string {
           <span class="break-all font-[var(--font-mono)] text-xs font-medium text-[var(--color-text)]">
             {{ annotation.change.path }}
           </span>
-          <span class="font-[var(--font-mono)] text-xs text-[var(--color-muted)]">
+          <span class="break-words font-[var(--font-mono)] text-xs text-[var(--color-muted)]">
             {{ annotation.label }}
           </span>
         </div>

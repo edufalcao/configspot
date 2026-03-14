@@ -49,7 +49,7 @@ const { showHelp } = useKeyboard({
 <template>
   <div class="mx-auto max-w-7xl px-4 py-8">
     <!-- Hero -->
-    <section class="mb-10 text-center animate-fade-in">
+    <section class="relative z-20 mb-10 text-center animate-fade-in">
       <h1 class="mb-3 font-[var(--font-display)] text-4xl font-bold tracking-tight md:text-5xl">
         <span class="gradient-text">Config comparison</span><br>
         <span class="text-[var(--color-text)]">that understands structure</span>
@@ -68,7 +68,7 @@ const { showHelp } = useKeyboard({
           </UiBaseButton>
           <div
             v-if="sampleMenuOpen"
-            class="absolute left-1/2 z-10 mt-2 w-56 -translate-x-1/2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] py-1 shadow-lg"
+            class="absolute left-1/2 z-50 mt-2 w-56 -translate-x-1/2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] py-1 shadow-lg"
           >
             <button
               v-for="opt in sampleOptions"
