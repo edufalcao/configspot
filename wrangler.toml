@@ -1,0 +1,8 @@
+name = "configspot"
+compatibility_date = "2025-07-15"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "configspot"
+database_id = "22fbc277-90cb-424d-a2cd-0c57659b758f"
