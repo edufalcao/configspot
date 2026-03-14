@@ -35,11 +35,13 @@ function handleCompare() {
         v-model="leftContent"
         label="Original"
         placeholder="Paste the original config here..."
+        :format="format"
       />
       <CompareConfigEditor
         v-model="rightContent"
         label="Updated"
         placeholder="Paste the updated config here..."
+        :format="format"
       />
     </div>
   </div>

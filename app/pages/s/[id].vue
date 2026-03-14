@@ -18,6 +18,8 @@ const format = ref<ConfigFormat>('env');
 const { shareUrl, isSharing, copied, copyUrl } = useShare();
 shareUrl.value = window.location.href;
 
+const activeTab = ref<'semantic' | 'raw' | 'summary'>('semantic');
+
 try {
   const data = await $fetch<{
     left_content: string,
@@ -86,6 +88,7 @@ try {
       </section>
 
       <ResultsPanel
+        v-model:active-tab="activeTab"
         :result="result"
         :risks="risks"
         :mask-secrets="maskSecrets"

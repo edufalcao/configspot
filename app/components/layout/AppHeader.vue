@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const colorMode = useColorMode();
+const { showHelp } = useKeyboardHelp();
 
 function toggleTheme() {
   colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark';
@@ -16,7 +17,39 @@ function toggleTheme() {
         <span class="gradient-text">configspot</span>
       </NuxtLink>
 
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2">
+        <button
+          class="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-muted)] transition-colors duration-[var(--duration)] hover:text-[var(--color-text)]"
+          aria-label="Keyboard shortcuts"
+          @click="showHelp = !showHelp"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect
+              x="2"
+              y="4"
+              width="20"
+              height="16"
+              rx="2"
+            />
+            <path d="M6 8h.001" />
+            <path d="M10 8h.001" />
+            <path d="M14 8h.001" />
+            <path d="M18 8h.001" />
+            <path d="M6 12h.001" />
+            <path d="M18 12h.001" />
+            <path d="M8 16h8" />
+          </svg>
+        </button>
         <button
           class="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-muted)] transition-colors duration-[var(--duration)] hover:text-[var(--color-text)]"
           aria-label="Toggle theme"

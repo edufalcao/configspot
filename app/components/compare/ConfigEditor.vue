@@ -1,17 +1,31 @@
 <script setup lang="ts">
+import type { ConfigFormat } from '~/types/config';
+import type { Extension } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
+import { json } from '@codemirror/lang-json';
+import { yaml } from '@codemirror/lang-yaml';
 import { Codemirror } from 'vue-codemirror';
 
-defineProps<{
+const props = defineProps<{
   label: string,
-  placeholder?: string
+  placeholder?: string,
+  format?: ConfigFormat | 'auto'
 }>();
 
 const model = defineModel<string>({ default: '' });
 
-const extensions = [
-  EditorView.lineWrapping
-];
+const extensions = computed<Extension[]>(() => {
+  const base: Extension[] = [EditorView.lineWrapping];
+  switch (props.format) {
+    case 'json':
+      base.push(json());
+      break;
+    case 'yaml':
+      base.push(yaml());
+      break;
+  }
+  return base;
+});
 
 function handleDrop(e: DragEvent) {
   e.preventDefault();

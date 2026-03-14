@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ConfigFormat } from '~/types/config';
+
 const {
   leftContent,
   rightContent,
@@ -14,11 +16,34 @@ const {
 
 const { shareUrl, isSharing, copied, share, copyUrl } = useShare();
 
+const sampleMenuOpen = ref(false);
+
+const sampleOptions: { format: ConfigFormat, label: string, description: string }[] = [
+  { format: 'env', label: '.env', description: 'Production environment variables' },
+  { format: 'json', label: 'JSON', description: 'TypeScript compiler config' },
+  { format: 'yaml', label: 'YAML', description: 'Docker Compose services' },
+  { format: 'toml', label: 'TOML', description: 'Cargo package manifest' },
+  { format: 'ini', label: 'INI', description: 'MySQL database config' }
+];
+
+function handleTrySample(format: ConfigFormat) {
+  sampleMenuOpen.value = false;
+  loadSample(format);
+}
+
 function handleShare() {
   if (result.value) {
     share(leftContent.value, rightContent.value, selectedFormat.value);
   }
 }
+
+const activeTab = ref<'semantic' | 'raw' | 'summary'>('semantic');
+
+const { showHelp } = useKeyboard({
+  onCompare: () => compare(),
+  onToggleSecretMask: () => { maskSecrets.value = !maskSecrets.value; },
+  onSwitchTab: (tab) => { activeTab.value = tab; }
+});
 </script>
 
 <template>
@@ -33,13 +58,29 @@ function handleShare() {
         Compare .env, JSON, YAML, TOML, and INI files with semantic diffs, risk detection, and secret masking. <span class="text-[var(--color-accent)]">Order-independent</span> — <span class="text-[var(--color-accent-2)]">key changes matter</span>, not line positions.
       </p>
       <div class="mt-5 flex items-center justify-center gap-3">
-        <UiBaseButton
-          variant="primary"
-          size="lg"
-          @click="loadSample"
-        >
-          Try it
-        </UiBaseButton>
+        <div class="relative">
+          <UiBaseButton
+            variant="primary"
+            size="lg"
+            @click="sampleMenuOpen = !sampleMenuOpen"
+          >
+            Try a sample
+          </UiBaseButton>
+          <div
+            v-if="sampleMenuOpen"
+            class="absolute left-1/2 z-10 mt-2 w-56 -translate-x-1/2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] py-1 shadow-lg"
+          >
+            <button
+              v-for="opt in sampleOptions"
+              :key="opt.format"
+              class="flex w-full flex-col px-4 py-2 text-left transition-colors hover:bg-[var(--color-elevated)]"
+              @click="handleTrySample(opt.format)"
+            >
+              <span class="font-[var(--font-mono)] text-sm font-medium text-[var(--color-text)]">{{ opt.label }}</span>
+              <span class="font-[var(--font-mono)] text-xs text-[var(--color-muted)]">{{ opt.description }}</span>
+            </button>
+          </div>
+        </div>
         <UiBaseButton
           v-if="result"
           variant="ghost"
@@ -92,6 +133,7 @@ function handleShare() {
       class="mt-4 animate-slide-up"
     >
       <ResultsPanel
+        v-model:active-tab="activeTab"
         :result="result"
         :risks="risks"
         :mask-secrets="maskSecrets"
@@ -102,5 +144,11 @@ function handleShare() {
         @copy-url="copyUrl"
       />
     </section>
+
+    <!-- Keyboard help overlay -->
+    <UiKeyboardHelp
+      :visible="showHelp"
+      @close="showHelp = false"
+    />
   </div>
 </template>
