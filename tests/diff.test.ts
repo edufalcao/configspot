@@ -1,6 +1,46 @@
 import { describe, it, expect } from 'vitest';
 import { semanticDiff } from '../app/utils/diff/semantic.ts';
+import { rawDiff } from '../app/utils/diff/raw.ts';
 import { parseEnv, parseJson, parseYaml } from '../app/utils/parsers/index.ts';
+
+describe('rawDiff', () => {
+  it('produces a diff string without ignoreWhitespace', () => {
+    const result = rawDiff('foo  bar', 'foo bar');
+    expect(typeof result).toBe('string');
+    expect(result.length).toBeGreaterThan(0);
+  });
+
+  it('ignoreWhitespace=false shows leading/trailing differences', () => {
+    const diff = rawDiff('  foo\n', 'foo\n');
+    // The unified diff header contains + and - but content diff should be visible
+    expect(diff).toContain('-  foo');
+  });
+
+  it('collapseWhitespace=true normalizes all whitespace', () => {
+    // Both strings collapse to 'foo bar', so no content differences
+    const diff = rawDiff('foo   bar\n', 'foo bar\n', { ignoreWhitespace: true });
+    // Check for actual content diff markers, not header characters
+    expect(diff).not.toMatch(/^\+foo bar$/m);
+    expect(diff).not.toMatch(/^-foo bar$/m);
+  });
+
+  it('collapseWhitespace=true ignores added internal spaces', () => {
+    const diff = rawDiff('a b\n', 'a  b\n', { ignoreWhitespace: true });
+    expect(diff).not.toMatch(/^\+a {2}b$/m);
+  });
+
+  it('collapseWhitespace=true ignores newlines and tabs mixed with spaces', () => {
+    const diff = rawDiff('foo\n  bar\tbaz\n', 'foo bar baz\n', { ignoreWhitespace: true });
+    // After collapse: both are 'foo bar baz', no content diff
+    expect(diff).not.toMatch(/^\+foo bar baz$/m);
+  });
+
+  it('reports actual text differences when ignoreWhitespace is false', () => {
+    const diff = rawDiff('foo\n', 'bar\n', { ignoreWhitespace: false });
+    expect(diff).toMatch(/^-foo$/m);
+    expect(diff).toMatch(/^\+bar$/m);
+  });
+});
 
 describe('semanticDiff', () => {
   it('detects added keys', () => {
