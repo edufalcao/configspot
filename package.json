@@ -14,7 +14,8 @@
     "prepare": "husky",
     "postinstall": "nuxt prepare",
     "test:packages": "vitest run",
-    "test:packages:watch": "vitest"
+    "test:packages:watch": "vitest",
+    "db:setup": "wrangler d1 migrations apply configspot --local"
   },
   "dependencies": {
     "@codemirror/lang-json": "^6.0.2",
