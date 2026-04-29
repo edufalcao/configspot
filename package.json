@@ -13,7 +13,8 @@
     "typecheck": "nuxt typecheck",
     "prepare": "husky",
     "postinstall": "nuxt prepare",
-    "test:packages": "echo 'No packages yet'"
+    "test:packages": "vitest run",
+    "test:packages:watch": "vitest"
   },
   "dependencies": {
     "@codemirror/lang-json": "^6.0.2",
