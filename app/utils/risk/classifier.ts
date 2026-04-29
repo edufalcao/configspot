@@ -241,9 +241,9 @@ const CHECKERS: Array<(change: DiffChange) => CategoryMatch | null> = [
   checkUrl,
   checkPort,
   checkKeyRemoved,
+  checkBooleanFlip,
   checkFeatureFlag,
   checkDependencyVersion,
-  checkBooleanFlip,
   checkThreshold,
   checkPlaceholder
 ];
