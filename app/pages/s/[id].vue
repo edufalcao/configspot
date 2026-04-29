@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { ConfigFormat } from '~/types/config';
 import { parseConfig } from '~/utils/parsers';
-import { compareConfigs } from '~/utils/diff';
+import { semanticDiff, rawDiff } from '~/utils/diff';
 import { classifyRisks } from '~/utils/risk';
-import type { DiffResult } from '~/types/diff';
+import type { DiffResult, DiffStats } from '~/types/diff';
 import type { RiskAnnotation } from '~/types/risk';
 
 const route = useRoute();
@@ -33,9 +33,19 @@ try {
   const right = parseConfig(data.right_content, fmt);
 
   format.value = left.format;
-  const diffResult = compareConfigs(left, right);
+
+  const changes = semanticDiff(left, right);
+  const raw = rawDiff(left.raw, right.raw);
+  const stats: DiffStats = {
+    added: changes.filter(c => c.type === 'added').length,
+    removed: changes.filter(c => c.type === 'removed').length,
+    changed: changes.filter(c => c.type === 'changed').length,
+    unchanged: changes.filter(c => c.type === 'unchanged').length,
+    total: changes.length
+  };
+  const diffResult: DiffResult = { format: left.format, changes, stats, rawDiff: raw };
   result.value = diffResult;
-  risks.value = classifyRisks(diffResult.changes);
+  risks.value = classifyRisks(changes);
 } catch {
   loadError.value = 'Comparison not found or has expired.';
 }

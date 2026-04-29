@@ -1,9 +1,13 @@
 import type { ConfigFormat, ConfigTree } from '~/types/config';
-import type { DiffResult } from '~/types/diff';
+import type { DiffResult, DiffStats } from '~/types/diff';
 import type { RiskAnnotation } from '~/types/risk';
 import { parseConfig } from '~/utils/parsers';
-import { compareConfigs } from '~/utils/diff';
+import { semanticDiff, rawDiff } from '~/utils/diff';
 import { classifyRisks } from '~/utils/risk';
+import { useDiffWorker } from './useDiffWorker';
+
+// Threshold (bytes per side) above which rawDiff is offloaded to a Worker.
+const WORKER_SIZE_THRESHOLD = 50_000;
 
 export function useCompare() {
   const leftContent = ref('');
@@ -17,7 +21,9 @@ export function useCompare() {
   const rightTree = ref<ConfigTree | null>(null);
   const error = ref<string | null>(null);
 
-  function compare() {
+  const { compute: computeRawDiff, isComputing: isComputingRawDiff } = useDiffWorker();
+
+  async function compare() {
     error.value = null;
     result.value = null;
     risks.value = [];
@@ -42,9 +48,37 @@ export function useCompare() {
       return;
     }
 
-    const diffResult = compareConfigs(left, right);
+    const changes = semanticDiff(left, right);
+
+    const leftRaw = left.raw;
+    const rightRaw = right.raw;
+    const useWorker
+      = leftRaw.length > WORKER_SIZE_THRESHOLD || rightRaw.length > WORKER_SIZE_THRESHOLD;
+
+    let raw: string;
+    if (useWorker) {
+      raw = await computeRawDiff(leftRaw, rightRaw);
+    } else {
+      raw = rawDiff(leftRaw, rightRaw);
+    }
+
+    const stats: DiffStats = {
+      added: changes.filter(c => c.type === 'added').length,
+      removed: changes.filter(c => c.type === 'removed').length,
+      changed: changes.filter(c => c.type === 'changed').length,
+      unchanged: changes.filter(c => c.type === 'unchanged').length,
+      total: changes.length
+    };
+
+    const diffResult: DiffResult = {
+      format: left.format,
+      changes,
+      stats,
+      rawDiff: raw
+    };
+
     result.value = diffResult;
-    risks.value = classifyRisks(diffResult.changes);
+    risks.value = classifyRisks(changes);
   }
 
   function loadSample(format?: ConfigFormat) {
@@ -339,6 +373,7 @@ max_allowed_packet = 64M`;
     leftTree,
     rightTree,
     error,
+    isComputing: isComputingRawDiff,
     compare,
     loadSample,
     clear
